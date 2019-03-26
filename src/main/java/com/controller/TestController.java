@@ -19,7 +19,7 @@ public class TestController {
 	public String get(@RequestParam(required = false, value="value") String value) {
 		
 		System.out.println("Appel GET");
-		System.out.println("value : "+villefranceDAO.lister());
+		System.out.println("value : " + villefranceDAO.lister());
 		
 		return value;
 		
