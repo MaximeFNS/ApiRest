@@ -11,7 +11,7 @@ public class Application
     		SpringApplication.run(Application.class, args);
     		System.out.println("Appli démarée !");
     	} catch (Exception e){
-    		System.out.println("Appli erreur !\n" + e);
+    		System.out.println("Appli erreur!\n" + e);
     	}
     }
 }
