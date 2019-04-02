@@ -10,11 +10,13 @@ import java.util.Properties;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+
 import com.dao.DAOException;
 
 public class DAOFactory {
 	
-	private static final String FICHIER_PROPERTIES = "src/main/java/application.properties";
+	private static final String FICHIER_PROPERTIES = "src/main/ressources/application.properties";
     private static final String PROPERTY_URL = "url";
     private static final String PROPERTY_DRIVER = "driver";
     private static final String PROPERTY_NOM_UTILISATEUR = "nomUtilisateur";
@@ -31,7 +33,7 @@ public class DAOFactory {
      *
      * @param daoFactory la Factory permettant la création d'une connexion à la BDD.
      */
-    private DAOFactory(String url, String nomUtilisateur, String motDePasse) {
+    public DAOFactory(String url, String nomUtilisateur, String motDePasse) {
         this.url = url;
         this.nomUtilisateur = nomUtilisateur;
         this.motDePasse = motDePasse;
@@ -117,6 +119,10 @@ public class DAOFactory {
         } else { // sinon, on souhaite une connexion au pool de connexions
             return this.dataSource.getConnection();
         }
+    }
+    
+    public VilleFranceDAO getVilleFranceDao() {
+        return new VilleFranceDAO(this);
     }
 
 }

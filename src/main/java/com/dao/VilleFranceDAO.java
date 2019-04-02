@@ -1,9 +1,13 @@
 package com.dao;
 
+import static com.dao.DAOUtilitaire.fermetures;
+
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,20 +19,20 @@ import com.blo.VilleFranceBLO;
 public class VilleFranceDAO extends DAO<VilleFranceBLO>{
 	
 	private static final String NOM_ENTITE = "VilleFrance";
-	private static final String ATTRIBUT_CODE_COMMUNE = "code_commune_INSEE";
-	private static final String ATTRIBUT_NOM_COMMUNE = "nom_Commune";
-	private static final String ATTRIBUT_CODE_POSTAL = "code_Postal";
-	private static final String ATTRIBUT_LIBELLE = "libelle_acheminement";
-	private static final String ATTRIBUT_LIGNE_5 = "ligne_5";
-	private static final String ATTRIBUT_LATITUDE= "latitude";
-	private static final String ATTRIBUT_LONGITUDE= "longitude";
+	private static final String ATTRIBUT_CODE_COMMUNE = "Code_commune_INSEE";
+	private static final String ATTRIBUT_NOM_COMMUNE = "Nom_Commune";
+	private static final String ATTRIBUT_CODE_POSTAL = "Code_Postal";
+	private static final String ATTRIBUT_LIBELLE = "Libelle_acheminement";
+	private static final String ATTRIBUT_LIGNE_5 = "Ligne_5";
+	private static final String ATTRIBUT_LATITUDE= "Latitude";
+	private static final String ATTRIBUT_LONGITUDE= "Longitude";
 	
 	private static final String[] ATTRIBUTS_NOMS = {ATTRIBUT_CODE_COMMUNE, ATTRIBUT_NOM_COMMUNE, 
 			ATTRIBUT_CODE_POSTAL, ATTRIBUT_LIBELLE,ATTRIBUT_LIGNE_5,ATTRIBUT_LATITUDE,ATTRIBUT_LONGITUDE};
 	
 	private static Logger logger = Logger.getLogger(VilleFranceDAO.class.getName());
 	
-	VilleFranceDAO(DAOFactory daoFactory) {
+	public VilleFranceDAO(DAOFactory daoFactory) {
 		super(daoFactory);
 		// TODO Auto-generated constructor stub
 	}
@@ -57,38 +61,17 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
 		
 	}
 
-	@Override
-	public List<VilleFranceBLO> lister(){
-		Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        List<VilleFranceBLO> vfBLO = new ArrayList<VilleFranceBLO>();
-        try {
-            // création d'une connexion grâce à la DAOFactory placée en attribut de la classe
-            connection = this.creerConnexion();
-            preparedStatement = connection.prepareStatement("SELECT * From Ville_France");
-            resultSet = preparedStatement.executeQuery();
-            // récupération des valeurs des attributs de la BDD pour les mettre dans une liste
-            while (resultSet.next()) {
-            	vfBLO.add(this.map(resultSet));
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            logger.log(Level.WARN, "Échec du listage des objets.", e);
-        }
-        return vfBLO;
-	}
 	
 	protected Connection creerConnexion() throws SQLException {
         return this.getDaoFactory().getConnection();
     }
 	
-	private VilleFranceBLO map(ResultSet resultSet) throws SQLException {
+	public VilleFranceBLO map(ResultSet resultSet) throws SQLException {
 		VilleFranceBLO vf = new VilleFranceBLO();
 		
         vf.setCode_commune_INSEE(resultSet.getString(ATTRIBUT_CODE_COMMUNE));
-        vf.setNom_Commune(resultSet.getString(ATTRIBUT_NOM_COMMUNE));
-        vf.setCode_Postal(resultSet.getString(ATTRIBUT_CODE_POSTAL));
+        vf.setNom_commune(resultSet.getString(ATTRIBUT_NOM_COMMUNE));
+        vf.setCode_postal(resultSet.getString(ATTRIBUT_CODE_POSTAL));
         vf.setLibelle_acheminement(resultSet.getString(ATTRIBUT_LIBELLE));
         vf.setLigne_5(resultSet.getString(ATTRIBUT_LIGNE_5));
         vf.setLatitude(resultSet.getString(ATTRIBUT_LATITUDE));
@@ -96,6 +79,34 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
         
         return vf;
     }
+
+	public List<VilleFranceBLO> lister() {
+		Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<VilleFranceBLO> vfBLO = new ArrayList<VilleFranceBLO>();
+        String resultat ="";
+        try {
+            // création d'une connexion grâce à la DAOFactory placée en attribut de la classe
+            connection = this.creerConnexion();
+            System.out.println(connection.toString());
+            preparedStatement = connection.prepareStatement("SELECT `Code_commune_INSEE`, `Nom_commune`, `Code_postal`, "
+            		+ "`Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude` FROM `ville_france` ");
+            resultSet = preparedStatement.executeQuery();
+            // récupération des valeurs des attributs de la BDD pour les mettre dans une liste
+            while (resultSet.next()) {
+            	System.out.println(resultSet.toString());
+            	vfBLO.add(this.map(resultSet));
+            }
+            
+        } catch (SQLException e) {
+            logger.log(Level.WARN, "Échec du listage des objets.", e);
+        } finally {
+            fermetures(resultSet, preparedStatement, connection);
+        }
+        
+        return vfBLO;
+	}
 	
 	
 }
