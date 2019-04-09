@@ -58,7 +58,7 @@ public class TestController extends HttpServlet {
 		} else {
 
 			for (int i = 0; i < villes.size(); i++) {
-				villests.add("Ville n° " + i + " : " + villes.get(i).toString());
+				villests.add(villes.get(i).toString());
 			}
 		}
 		return villests;
