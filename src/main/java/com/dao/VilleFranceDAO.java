@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.Query;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -81,7 +83,7 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
             
             //Exécution des requêtes afin de valider une sur un sujet et annuler les candidatures des autres
             preparedStatement = connection.prepareStatement("UPDATE `ville_france` SET  `Code_postal` = " + string + " WHERE `Code_postal` = '" + test + "'");
-        
+            
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
