@@ -39,7 +39,24 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
 
 	@Override
 	public void creer(VilleFranceBLO objet) {
-		// TODO Auto-generated method stub
+		Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+           
+            connection = this.creerConnexion();
+          
+            preparedStatement = connection.prepareStatement("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, "
+            		+ "`Ligne_5`, `Latitude`, `Longitude`)" 
+            + "VALUES ('" + objet.getCode_commune_INSEE() + "' ,'" + objet.getNom_commune() + "' ," +objet.getCode_postal() + " ," 
+            		+ objet.getLibelle_acheminement() + " ," + objet.getLigne_5() + " ," + objet.getLatitude() + " ," 
+            + objet.getLongitude() + ")");
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.WARN, "Échec de la création de l'objet, aucune ligne ajoutée dans la table.", e);
+        } finally {
+            
+            fermetures(preparedStatement, connection);
+        }
 		
 	}
 
@@ -49,18 +66,63 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
 		return null;
 	}
 
-	@Override
-	public void modifier(VilleFranceBLO objet) {
-		// TODO Auto-generated method stub
+	
+	public void modifierCodePostal(VilleFranceBLO objet, String string) {
+
+		Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        ResultSet resultSet = null;
+        String test = objet.getCode_postal();
+        
+        try {
+            //Création d'une connexion grâce à la DAOFactory placée en attribut de la classe
+            connection = this.creerConnexion();
+            
+            //Exécution des requêtes afin de valider une sur un sujet et annuler les candidatures des autres
+            preparedStatement = connection.prepareStatement("UPDATE `ville_france` SET  `Code_postal` = " + string + " WHERE `Code_postal` = " + test);
+        
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.log(Level.WARN, "Échec du listage des objets.", e);
+        } finally {
+            fermetures(resultSet, preparedStatement, connection);
+        }
 		
 	}
 
 	@Override
 	public void supprimer(VilleFranceBLO objet) {
-		// TODO Auto-generated method stub
+		Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        ResultSet resultSet = null;
+        String test = objet.getCode_postal();
+        
+        try {
+            //Création d'une connexion grâce à la DAOFactory placée en attribut de la classe
+            connection = this.creerConnexion();
+            
+            //Exécution des requêtes afin de valider une sur un sujet et annuler les candidatures des autres
+            System.out.println(test); 
+            preparedStatement = connection.prepareStatement("DELETE FROM `ville_france` WHERE Code_postal = " + test);
+        
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.log(Level.WARN, "Échec du listage des objets.", e);
+        } finally {
+            fermetures(resultSet, preparedStatement, connection);
+        }
 		
 	}
 
+	@Override
+	public void modifier(VilleFranceBLO objet) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	protected Connection creerConnexion() throws SQLException {
         return this.getDaoFactory().getConnection();

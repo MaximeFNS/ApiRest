@@ -12,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,16 +32,17 @@ public class TestController extends HttpServlet {
 
 	@RequestMapping(value = "/get", method = RequestMethod.GET)
 	@ResponseBody
-	public List<String> get(@RequestParam(required = false, value = "value") String value,
+	public List<String> get(@RequestParam(required = true, value = "value") String value,
 			@RequestParam(required = false, value = "value2") String value2) {
-
+		
+		//Affichetoute les villes ou seulement le nom ou le nom et le code en fonction des paramètres
 		DAOFactory daoFactory = new DAOFactory(
 				"jdbc:mysql://localhost/maven?&LegacyDatetimeCode=false&serverTimezone=Europe/Paris", "maven", "maven");
 
 		this.villefranceDAO = daoFactory.getVilleFranceDao();
 		List<VilleFranceBLO> villes = villefranceDAO.lister();
 		List<String> villests = new ArrayList();
-
+		
 		if (value.contains("nom")) {
 
 			for (int i = 0; i < villes.size(); i++) {
@@ -64,34 +67,56 @@ public class TestController extends HttpServlet {
 
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
 	@ResponseBody
-	public String post(@RequestParam(required = false, value = "value") String value) {
+	public void post(@RequestParam(required = false, value = "value") String nom, 
+			@RequestParam(required = false, value = "value2") String nom2) {
+		
+		//ChangerCodePostal
+		DAOFactory daoFactory = new DAOFactory(
+				"jdbc:mysql://localhost/maven?&LegacyDatetimeCode=false&serverTimezone=Europe/Paris", "maven", "maven");
 
-		System.out.println("Appel POST");
-		System.out.println("value :  " + value);
+		this.villefranceDAO = daoFactory.getVilleFranceDao();
+		VilleFranceBLO blo = new VilleFranceBLO();
 
-		return value;
+		blo.setCode_postal(nom);
+		String nouveauCP = nom2;
+		this.villefranceDAO.modifierCodePostal(blo, nouveauCP);
+		
 
 	}
 
 	@RequestMapping(value = "/put", method = RequestMethod.PUT)
 	@ResponseBody
-	public String put(@RequestParam(required = false, value = "value") String value) {
+	public void put(@RequestParam(required = false, value = "value") String nom, 
+			@RequestParam(required = false, value = "value2") String nom2) {
+		
+		//ChangerCodePostal
+		DAOFactory daoFactory = new DAOFactory(
+				"jdbc:mysql://localhost/maven?&LegacyDatetimeCode=false&serverTimezone=Europe/Paris", "maven", "maven");
 
-		System.out.println("Appel POST");
-		System.out.println("value :  " + value);
+		this.villefranceDAO = daoFactory.getVilleFranceDao();
+		VilleFranceBLO blo = new VilleFranceBLO();
 
-		return value;
+		blo.setCode_postal(nom);
+		String nouveauCP = nom2;
+		this.villefranceDAO.modifierCodePostal(blo, nouveauCP);
+		
 
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
 	@ResponseBody
-	public String delete(@RequestParam(required = false, value = "value") String value) {
+	public void delete(@RequestParam(required = false, value = "value")String code) {
+		
+		//suppression en fonction du code Postal
+		DAOFactory daoFactory = new DAOFactory(
+				"jdbc:mysql://localhost/maven?&LegacyDatetimeCode=false&serverTimezone=Europe/Paris", "maven", "maven");
 
-		System.out.println("Appel POST");
-		System.out.println("value :  " + value);
+		this.villefranceDAO = daoFactory.getVilleFranceDao();
+		VilleFranceBLO blo = new VilleFranceBLO();
 
-		return value;
+		blo.setCode_postal(code);
+		
+		this.villefranceDAO.supprimer(blo);
 
 	}
 
