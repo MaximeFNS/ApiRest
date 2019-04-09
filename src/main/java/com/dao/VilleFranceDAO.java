@@ -80,7 +80,7 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
             connection = this.creerConnexion();
             
             //Exécution des requêtes afin de valider une sur un sujet et annuler les candidatures des autres
-            preparedStatement = connection.prepareStatement("UPDATE `ville_france` SET  `Code_postal` = " + string + " WHERE `Code_postal` = " + test);
+            preparedStatement = connection.prepareStatement("UPDATE `ville_france` SET  `Code_postal` = " + string + " WHERE `Code_postal` = '" + test + "'");
         
             preparedStatement.executeUpdate();
 
@@ -106,7 +106,7 @@ public class VilleFranceDAO extends DAO<VilleFranceBLO>{
             
             //Exécution des requêtes afin de valider une sur un sujet et annuler les candidatures des autres
             System.out.println(test); 
-            preparedStatement = connection.prepareStatement("DELETE FROM `ville_france` WHERE Code_postal = " + test);
+            preparedStatement = connection.prepareStatement("DELETE FROM `ville_france` WHERE Code_postal = '" + test + "'");
         
             preparedStatement.executeUpdate();
 
